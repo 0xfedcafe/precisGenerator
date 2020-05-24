@@ -25,11 +25,10 @@ public:
 private:
 
     Ui::MainWindow* ui;
-    GenerateImage* buildPicture = new GenerateImage();
 
 private slots:
     void handleButton();
-
+    void handleFiles(const QStringList &selected);
 
 };
 

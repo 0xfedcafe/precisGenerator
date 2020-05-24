@@ -38,13 +38,11 @@ void MainWindow::DrawSettings() {
     currentParameters->changeWidth->setMinimumSize(QSize{60,40});
     currentParameters->changeHeight->setMinimumSize(QSize{60,40});
 
-
     currentLayout->addWidget(currentParameters->changeDistortion);
     currentLayout->addWidget(currentParameters->changeHeight);
     currentLayout->addWidget(currentParameters->changeWidth);
     currentLayout->addWidget(this->activeButton);
 
-//    setCentralWidget(currentSettings);
     currentSettings->setLayout(currentLayout);
     currentSettings->move(this->size().width()-currentParameters->changeDistortion->width(),
                           this->size().height()/2-2*currentParameters->changeDistortion->height());
@@ -56,17 +54,28 @@ void MainWindow::handleButton() {
 
     QFileDialog* getFiles = new QFileDialog();
     getFiles->setFileMode(QFileDialog::ExistingFiles);
-    connect(getFiles, SIGNAL(filesSelected()), this, SLOTS())
+    connect(getFiles, &QFileDialog::filesSelected, this, &MainWindow::handleFiles);
     getFiles->show();
 
 }
 
+void MainWindow::handleFiles(const QStringList &selected) {
 
+    auto params = this->parameters;
+    GenerateImage process(params->changeDistortion->text().toDouble(),
+                          params->changeWidth->text().toDouble(),
+                          params->changeHeight->text().toDouble());
+    for(const auto& photo : selected) {
+        qDebug() << photo << '\n';
+    }
+    process.inputImage(selected);
+    process.generateImage();
+}
 
 void MainWindow::resizeEvent(QResizeEvent* event) {
     QMainWindow::resizeEvent(event);
     DrawSettings();
-    qDebug() << this->size() << "\n";
+    qDebug() << this->size() << '\n';
 }
 
 MainWindow::~MainWindow()

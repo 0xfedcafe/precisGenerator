@@ -9,7 +9,7 @@ class GenerateImage
     public:
 
         //constructor
-        GenerateImage(double rDistortion = 3,double rWidth = 10,double rHeight = 10);
+        GenerateImage(double rDistortion,double rWidth,double rHeight);
 
         //setters
         void setDistortion(double rDistortion);
@@ -22,8 +22,8 @@ class GenerateImage
         double getHeight();
 
         //logic
-        Magick::Image* generateImage();
-        void inputImage(std::vector<QString> filePathes);
+        void generateImage();
+        void inputImage(const QStringList& filePathes);
         bool extractImage(Magick::Image* readyPicture, QString filepath);
 
     private:

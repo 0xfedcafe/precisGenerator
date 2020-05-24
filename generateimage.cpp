@@ -35,10 +35,10 @@ void GenerateImage::setDistortion(double rDistortion) {
     this->distortion = rDistortion;
 }
 
-void GenerateImage::inputImage(std::vector<QString> filePathes){
+void GenerateImage::inputImage(const QStringList& filePathes){
     Magick::Image image;
     try {
-        for(const auto& filePath : filePathes) {
+        for(const auto& filePath: filePathes) {
             image.read(filePath.toStdString());
             this->processImages.push_back(image);
         }
@@ -48,8 +48,11 @@ void GenerateImage::inputImage(std::vector<QString> filePathes){
     }
 }
 
-Magick::Image* generateImage(){
-
+void GenerateImage::generateImage() {
+    for(auto& image : this->processImages) {
+        qDebug() << "shit\n";
+        image.write("/home/prise/testImages/dick.jpg");
+    }
 }
 
 bool GenerateImage::extractImage(Magick::Image* readyPicture, QString fullPath) {
