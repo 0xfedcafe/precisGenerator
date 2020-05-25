@@ -50,9 +50,24 @@ void GenerateImage::inputImage(const QStringList& filePathes){
 
 void GenerateImage::generateImage() {
     for(auto& image : this->processImages) {
-        qDebug() << "shit\n";
-        image.write("/home/prise/testImages/dick.jpg");
+        qDebug() << "processing\n";
+        std::string fileName = image.baseFilename();
+        int i = fileName.size() - 1;
+        while(fileName[i] != '/') {
+            i--;
+        }
+        fileName = fileName.substr(i,fileName.size()-i);
+        GenerateImage::placeText(image).write("/home/prise/testImages/" + fileName);
+        i++;
     }
+}
+
+Magick::Image GenerateImage::placeText(Magick::Image& modificate) {
+    modificate.strokeColor("red");
+    modificate.fillColor("green");
+    modificate.draw(Magick::DrawableCircle(100,100,50,100));
+    qDebug() << QString::fromStdString(modificate.format())<< '\n';
+    return modificate;
 }
 
 bool GenerateImage::extractImage(Magick::Image* readyPicture, QString fullPath) {

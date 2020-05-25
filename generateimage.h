@@ -25,6 +25,7 @@ class GenerateImage
         void generateImage();
         void inputImage(const QStringList& filePathes);
         bool extractImage(Magick::Image* readyPicture, QString filepath);
+        Magick::Image placeText(Magick::Image& modifcate);
 
     private:
         double distortion;
