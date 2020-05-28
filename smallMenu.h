@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QDoubleValidator>
+#include <QLabel>
 class SmallMenu {
     public:
         SmallMenu(QWidget* parent = nullptr) {
@@ -16,6 +17,7 @@ class SmallMenu {
             changeWidth->setValidator(new QDoubleValidator(0, 100, 10));
         }
         QWidget* newSettings;
+        QLabel* label;
         QVBoxLayout* settingsLayout = new QVBoxLayout;
         QLineEdit* changeDistortion = new QLineEdit("3");
         QLineEdit* changeHeight = new QLineEdit("10");

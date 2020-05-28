@@ -57,17 +57,29 @@ void GenerateImage::generateImage() {
             i--;
         }
         fileName = fileName.substr(i,fileName.size()-i);
-        GenerateImage::placeText(image).write("/home/prise/testImages/" + fileName);
+        GenerateImage::placeText(image).write("/home/prise/testImages/"+ fileName);
         i++;
     }
 }
 
 Magick::Image GenerateImage::placeText(Magick::Image& modificate) {
-    modificate.strokeColor("red");
-    modificate.fillColor("green");
-    modificate.draw(Magick::DrawableCircle(100,100,50,100));
+
+    modificate.font("Celestina");
+    modificate.fontPointsize(72);
+    modificate.strokeColor("blue");
+//    modificate.draw(Magick::DrawableStrokeColor("blue"));
+//    modificate.draw(Magick::DrawableFillColor("blue"));
+    modificate.draw(Magick::DrawableFont("Calestina",Magick::AnyStyle,800,Magick::NormalStretch));
+
+    modificate.draw(Magick::DrawableText(1,100,"G"));
+    modificate.draw(Magick::DrawableText(50,100,"o"));
+    modificate.draw(Magick::DrawableText(100,100,"v"));
+    modificate.draw(Magick::DrawableText(150,100,"n"));
+    modificate.draw(Magick::DrawableText(200,100,"o"));
+
     qDebug() << QString::fromStdString(modificate.format())<< '\n';
     return modificate;
+
 }
 
 bool GenerateImage::extractImage(Magick::Image* readyPicture, QString fullPath) {

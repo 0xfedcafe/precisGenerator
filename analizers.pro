@@ -36,7 +36,6 @@ HEADERS += \
 
 FORMS += \
         mainwindow.ui
-
 QMAKE_CXXFLAGS += $(shell Magick++-config --cppflags --cxxflags)
 LIBS += $(shell Magick++-config --ldflags --libs)
 # Default rules for deployment.

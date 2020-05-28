@@ -2,8 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QLabel>
 #include "smallMenu.h"
 #include <generateimage.h>
+
 namespace Ui {
     class MainWindow;
 }

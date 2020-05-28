@@ -6,6 +6,8 @@
 #include <QTextEdit>
 #include <QDebug>
 #include <QFileDialog>
+#include <QPixmap>
+#include <QImageReader>
 #define TEXTBOX_MAX_HEIGHT 120
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -17,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->parameters->newSettings = new QWidget(this->currentScreen);
     connect(this->activeButton,SIGNAL(clicked()), this, SLOT(handleButton()));
     this->currentScreen->setMinimumSize(QSize{496,200});
+    this->parameters->label = new QLabel("Photos",this->currentScreen);
+//    this->parameters->label->setMinimumSize(QSize(496,496));
     setCentralWidget(this->currentScreen);
 }
 
@@ -70,6 +74,26 @@ void MainWindow::handleFiles(const QStringList &selected) {
     }
     process.inputImage(selected);
     process.generateImage();
+    QString fileName = selected[0];
+    qDebug() << fileName << '\n';
+    int i = fileName.size() - 1;
+    while(fileName[i] != '/') {
+        i--;
+    }
+    fileName = fileName.mid(i+1,fileName.size()-i);
+
+    qDebug() << QImageReader::supportedImageFormats ();
+    QImage imagePixmap;
+    qDebug() << "/home/prise/testImages/" + fileName << '\n';
+    imagePixmap.load("/home/prise/testImages/" + fileName);
+    imagePixmap = imagePixmap.scaled(std::min(this->height()/4,this->width()/4),
+                                     std::min(this->height()/4,this->width()/4)/16*9,
+                                     Qt::KeepAspectRatio);
+    this->parameters->label->setPixmap(QPixmap::fromImage(imagePixmap));
+    this->parameters->label->setScaledContents(true);
+    this->parameters->label->resize(imagePixmap.size());
+    this->parameters->label->show();
+
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event) {
