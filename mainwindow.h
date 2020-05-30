@@ -10,6 +10,13 @@ namespace Ui {
     class MainWindow;
 }
 
+namespace tl {
+    template <typename T> int sgn(const T& val) {
+        return (T(0) < val) - (val < T(0));
+    }
+
+}
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "ui_settings.h"
 #include <QBoxLayout>
 #include <QVBoxLayout>
 #include <QTextEdit>
@@ -19,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->parameters->newSettings = new QWidget(this->currentScreen);
     connect(this->activeButton,SIGNAL(clicked()), this, SLOT(handleButton()));
     this->currentScreen->setMinimumSize(QSize{496,200});
-    this->parameters->label = new QLabel("Photos",this->currentScreen);
+    this->parameters->label = new QLabel("Photos");//,this->currentScreen);
 //    this->parameters->label->setMinimumSize(QSize(496,496));
     setCentralWidget(this->currentScreen);
 }
@@ -86,9 +85,9 @@ void MainWindow::handleFiles(const QStringList &selected) {
     QImage imagePixmap;
     qDebug() << "/home/prise/testImages/" + fileName << '\n';
     imagePixmap.load("/home/prise/testImages/" + fileName);
-    imagePixmap = imagePixmap.scaled(std::min(this->height()/4,this->width()/4),
-                                     std::min(this->height()/4,this->width()/4)/16*9,
-                                     Qt::KeepAspectRatio);
+//    imagePixmap = imagePixmap.scaled(std::min(this->height()/4,this->width()/4),
+//                                     std::min(this->height()/4,this->width()/4)/16*9,
+//                                     Qt::KeepAspectRatio);
     this->parameters->label->setPixmap(QPixmap::fromImage(imagePixmap));
     this->parameters->label->setScaledContents(true);
     this->parameters->label->resize(imagePixmap.size());

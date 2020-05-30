@@ -24,8 +24,9 @@ class GenerateImage
         //logic
         void generateImage();
         void inputImage(const QStringList& filePathes);
+        double randomizeCoords(const double& y);
         bool extractImage(Magick::Image* readyPicture, QString filepath);
-        Magick::Image placeText(Magick::Image& modifcate);
+        Magick::Image placeText(Magick::Image& modifcate, const QString& text);
 
     private:
         double distortion;

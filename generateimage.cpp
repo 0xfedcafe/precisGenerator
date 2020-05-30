@@ -1,4 +1,5 @@
 #include "generateimage.h"
+#include <mainwindow.h>
 #include <ImageMagick-7/Magick++.h>
 #include <QFile>
 #include <QDebug>
@@ -57,29 +58,71 @@ void GenerateImage::generateImage() {
             i--;
         }
         fileName = fileName.substr(i,fileName.size()-i);
-        GenerateImage::placeText(image).write("/home/prise/testImages/"+ fileName);
+
+        QString textForProcessing =   QString("FROM fairest creatures we desire increase,")
+                                    + QString("That thereby beauty's rose might never die,")
+                                    + QString("But as the riper should by time decease,")
+                                    + QString("His tender heir might bear his memory:")
+                                    + QString("But thou, contracted to thine own bright eyes,")
+                                    + QString("Feed'st thy light'st flame with self-substantial fuel,")
+                                    + QString("Making a famine where abundance lies,")
+                                    + QString("Thyself thy foe, to thy sweet self too cruel.")
+                                    + QString("Thou that art now the world's fresh ornament")
+                                    + QString("And only herald to the gaudy spring,")
+                                    + QString("Within thine own bud buriest thy content")
+                                    + QString("And, tender churl, makest waste in niggarding.")
+                                    + QString("Pity the world, or else this glutton be,");
+
+        GenerateImage::placeText(image,textForProcessing).write("/home/prise/testImages/"+ fileName);
         i++;
     }
 }
 
-Magick::Image GenerateImage::placeText(Magick::Image& modificate) {
+Magick::Image GenerateImage::placeText(Magick::Image& modificate, const QString& text) {
 
     modificate.font("Celestina");
-    modificate.fontPointsize(72);
+    modificate.fontPointsize(50);
     modificate.strokeColor("blue");
 //    modificate.draw(Magick::DrawableStrokeColor("blue"));
 //    modificate.draw(Magick::DrawableFillColor("blue"));
     modificate.draw(Magick::DrawableFont("Calestina",Magick::AnyStyle,800,Magick::NormalStretch));
 
-    modificate.draw(Magick::DrawableText(1,100,"G"));
-    modificate.draw(Magick::DrawableText(50,100,"o"));
-    modificate.draw(Magick::DrawableText(100,100,"v"));
-    modificate.draw(Magick::DrawableText(150,100,"n"));
-    modificate.draw(Magick::DrawableText(200,100,"o"));
+//    modificate.draw(Magick::DrawableText(20,100,"G"));
+//    modificate.draw(Magick::DrawableText(70,100,"o"));
+//    modificate.draw(Magick::DrawableText(120,100,"v"));
+//    modificate.draw(Magick::DrawableText(170,100,"n"));
+//    modificate.draw(Magick::DrawableText(220,100,"o"));
+    int i = 0;
+    int j = 1;
+    double firstDerivative = 0;
+    double currentHeight = 2;
+
+
+    const auto tempText = std::string(text.toLocal8Bit().constData());
+    qDebug() << "dick" << text;
+
+    for(const auto& letter : tempText) {
+        firstDerivative += randomizeCoords(currentHeight);
+        currentHeight += firstDerivative;
+        if(static_cast<unsigned>(180+28*i) >= modificate.baseColumns()) {
+            i = 0;
+            j++;
+        }
+        qDebug() << firstDerivative << " " << modificate.baseColumns() << " " << currentHeight;
+        modificate.draw(Magick::DrawableText((60+28*i)%modificate.baseColumns(),70*j+currentHeight,std::string(1,letter),"UTF-8"));
+        qDebug() << (60+28*i) % modificate.baseColumns() << " " << currentHeight;
+        i++;
+
+    }
 
     qDebug() << QString::fromStdString(modificate.format())<< '\n';
     return modificate;
 
+}
+
+double GenerateImage::randomizeCoords(const double& y) {
+    std::srand(std::time(NULL));
+    return -tl::sgn(y)*std::pow(std::abs(y), std::rand()%2);
 }
 
 bool GenerateImage::extractImage(Magick::Image* readyPicture, QString fullPath) {
