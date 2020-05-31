@@ -80,22 +80,20 @@ void GenerateImage::generateImage() {
 
 Magick::Image GenerateImage::placeText(Magick::Image& modificate, const QString& text) {
 
-    modificate.font("Celestina");
-    modificate.fontPointsize(50);
-    modificate.strokeColor("blue");
+//    modificate.font("Quirlycues");
+    modificate.font("Quirlycues");
+    modificate.fontWeight(1);
+    modificate.fontPointsize(22);
+    modificate.strokeWidth(0.5);
+    modificate.strokeColor("#00202F");
+//    modificate.strokeWidth(2);
 //    modificate.draw(Magick::DrawableStrokeColor("blue"));
 //    modificate.draw(Magick::DrawableFillColor("blue"));
-    modificate.draw(Magick::DrawableFont("Calestina",Magick::AnyStyle,800,Magick::NormalStretch));
-
-//    modificate.draw(Magick::DrawableText(20,100,"G"));
-//    modificate.draw(Magick::DrawableText(70,100,"o"));
-//    modificate.draw(Magick::DrawableText(120,100,"v"));
-//    modificate.draw(Magick::DrawableText(170,100,"n"));
-//    modificate.draw(Magick::DrawableText(220,100,"o"));
+//    modificate.draw(Magick::DrawableFont("Celestina",Magick::AnyStyle,400,Magick::NormalStretch));
     int i = 0;
     int j = 1;
     double firstDerivative = 0;
-    double currentHeight = 2;
+    double currentHeight = 3;
 
 
     const auto tempText = std::string(text.toLocal8Bit().constData());
@@ -104,13 +102,16 @@ Magick::Image GenerateImage::placeText(Magick::Image& modificate, const QString&
     for(const auto& letter : tempText) {
         firstDerivative += randomizeCoords(currentHeight);
         currentHeight += firstDerivative;
-        if(static_cast<unsigned>(180+28*i) >= modificate.baseColumns()) {
+        if(static_cast<unsigned>(70+11*i) >= modificate.baseColumns()) {
             i = 0;
+            if(letter == QChar('.') || letter == QChar('/') || letter == QChar('\\')) {
+                continue;
+            }
             j++;
         }
-        qDebug() << firstDerivative << " " << modificate.baseColumns() << " " << currentHeight;
-        modificate.draw(Magick::DrawableText((60+28*i)%modificate.baseColumns(),70*j+currentHeight,std::string(1,letter),"UTF-8"));
-        qDebug() << (60+28*i) % modificate.baseColumns() << " " << currentHeight;
+//        qDebug() << firstDerivative << " " << modificate.baseColumns() << " " << currentHeight;
+        modificate.draw(Magick::DrawableText(30+i*11,70*j+currentHeight,std::string(1,letter),"UTF-8"));
+        qDebug() << (60+11*i) % modificate.baseColumns() << " " << currentHeight;
         i++;
 
     }
