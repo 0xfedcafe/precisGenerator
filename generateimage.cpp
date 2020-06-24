@@ -5,6 +5,9 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <iostream>
+#include <locale>
+#include <codecvt>
+#include <string>
 GenerateImage::GenerateImage(double rDistortion,double rWidth,double rHeight) {
 
     setDistortion(rDistortion);
@@ -58,7 +61,7 @@ void GenerateImage::generateImage() {
             i--;
         }
         fileName = fileName.substr(i,fileName.size()-i);
-
+        /*
         QString textForProcessing =   QString("FROM fairest creatures we desire increase,")
                                     + QString("That thereby beauty's rose might never die,")
                                     + QString("But as the riper should by time decease,")
@@ -73,47 +76,45 @@ void GenerateImage::generateImage() {
                                     + QString("And, tender churl, makest waste in niggarding.")
                                     + QString("Pity the world, or else this glutton be,");
 
+        */
+        std::string textForProcessing = u8"русский";
         GenerateImage::placeText(image,textForProcessing).write("/home/prise/testImages/"+ fileName);
-        i++;
     }
 }
 
-Magick::Image GenerateImage::placeText(Magick::Image& modificate, const QString& text) {
-
+Magick::Image GenerateImage::placeText(Magick::Image& modificate, const std::string& text) {
 //    modificate.font("Quirlycues");
-    modificate.font("Quirlycues");
     modificate.fontWeight(1);
     modificate.fontPointsize(22);
     modificate.strokeWidth(0.5);
     modificate.strokeColor("#00202F");
-//    modificate.strokeWidth(2);
-//    modificate.draw(Magick::DrawableStrokeColor("blue"));
-//    modificate.draw(Magick::DrawableFillColor("blue"));
-//    modificate.draw(Magick::DrawableFont("Celestina",Magick::AnyStyle,400,Magick::NormalStretch));
+
     int i = 0;
     int j = 1;
     double firstDerivative = 0;
     double currentHeight = 3;
 
 
-    const auto tempText = std::string(text.toLocal8Bit().constData());
-    qDebug() << "dick" << text;
-
-    for(const auto& letter : tempText) {
+    const auto tempText = text;
+    QByteArray byteArray(tempText.c_str(), tempText.length());
+    qDebug() << byteArray.toHex() << "\n\n\n";
+    for(const auto& x : byteArray) {
+        qDebug() << QString("0x%1").arg(static_cast<int>(x), 0, 16) << '\n';
+    }
+    std::cout << tempText << '\n';
+    for(int p = 0; p < tempText.size(); p+=2) {
         firstDerivative += randomizeCoords(currentHeight);
         currentHeight += firstDerivative;
         if(static_cast<unsigned>(70+11*i) >= modificate.baseColumns()) {
             i = 0;
-            if(letter == QChar('.') || letter == QChar('/') || letter == QChar('\\')) {
+            if(tempText[p] == '.' ||  tempText[p] == '/' || tempText[p] == '\\') {
                 continue;
             }
             j++;
         }
-//        qDebug() << firstDerivative << " " << modificate.baseColumns() << " " << currentHeight;
-        modificate.draw(Magick::DrawableText(30+i*11,70*j+currentHeight,std::string(1,letter),"UTF-8"));
+        modificate.draw(Magick::DrawableText(30+i*11,70*j+currentHeight,tempText.substr(p,2),"UTF-8"));
         qDebug() << (60+11*i) % modificate.baseColumns() << " " << currentHeight;
         i++;
-
     }
 
     qDebug() << QString::fromStdString(modificate.format())<< '\n';
@@ -135,3 +136,8 @@ bool GenerateImage::extractImage(Magick::Image* readyPicture, QString fullPath) 
     }
 }
 
+//    modificate.font("Quirlycues");
+//    modificate.strokeWidth(2);
+//    modificate.draw(Magick::DrawableStrokeColor("blue"));
+//    modificate.draw(Magick::DrawableFillColor("blue"));
+//    modificate.draw(Magick::DrawableFont("Celestina",Magick::AnyStyle,400,Magick::NormalStretch));

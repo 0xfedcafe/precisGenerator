@@ -3,7 +3,7 @@
 
 #include <QString>
 #include <vector>
-#include <ImageMagick-7/Magick++.h>
+#include "ImageMagick-7/Magick++.h"
 class GenerateImage
 {
     public:
@@ -26,7 +26,7 @@ class GenerateImage
         void inputImage(const QStringList& filePathes);
         double randomizeCoords(const double& y);
         bool extractImage(Magick::Image* readyPicture, QString filepath);
-        Magick::Image placeText(Magick::Image& modifcate, const QString& text);
+        Magick::Image placeText(Magick::Image& modifcate, const std::string& text);
 
     private:
         double distortion;

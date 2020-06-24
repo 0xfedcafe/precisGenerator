@@ -27,7 +27,8 @@ CONFIG += c++11
 SOURCES += \
         generateimage.cpp \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        smallMenu.cpp
 
 HEADERS += \
         generateimage.h \
